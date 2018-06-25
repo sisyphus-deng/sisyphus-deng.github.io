@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Install MacOS on HP 17-x173dx (1) | Sisyphus Deng</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Install MacOS on HP 17-x173dx (1)</h1><a id="logo" href="/.">Sisyphus Deng</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Install MacOS on HP 17-x173dx (1)</h1><div class="post-meta">Jun 24, 2018<span> | </span><span class="category"><a href="/categories/MacOS/">MacOS</a></span></div><div class="post-content"><p>###Preface<br> When I come to US 10 years ago, my PhD supervisor was a big fan of Apple. All the computers in the lab is Mac. Since then, I was used to MacOS and already setup a  productive pipeline for my daily use. Also, I have paid some on softwares, such as Alfred, omniGraffle, omniFocus, etc. I think windows 10 is also great OS, however, for me it was too time-consuming to switch back to windows.</p>
+<p>Recently, I feel 8gb+256gb of my MacBook Pro MF840 (Retina, early 2015) is not enough for me and MacBook Pro is very hard and expensive to update. I planned to by a Mac mini. While I am waiting for a deal, I found this HP 17-x173dx in my storage room. I bought it last year at best buy, just because it was cheap, but I have never used it. After I briefly checked the specs, it might be great for Hackintosh.</p>
+<p>Actually, I am not familiar with Hackintosh, and my purpose is easy – build up a MacOS workstation at home. Thus, I didn’t make everything working today. </p>
+<p>###Not working</p>
+<ul>
+<li>Wireless<ul>
+<li>Realtek RTK8188EE</li>
+<li>There is no support for Realtek yet</li>
+<li>I used is as a desktop so that it is not a big deal. Maybe fix it with BT4.0 later.</li>
+</ul>
+</li>
+<li>Camera</li>
+<li>Audio<ul>
+<li>Partially works </li>
+<li>The max volume is a little low</li>
+<li>It does not auto switch to headphone when plugged</li>
+<li>The voodooDdaSettingsLoader has some permission problems<br>###<a href="https://support.hp.com/us-en/document/c05447632" target="_blank" rel="noopener">Specs</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>i7-7500U</li>
+<li>8 GB DDR4</li>
+<li>Intel HD Graphics 620</li>
+<li>Samsung EVO 850 1 TB <ul>
+<li>It comes a 1 TB Blue disk 5400rpm.</li>
+<li>I am planing buy a hard drive caddy and put the old hard drive for larger</li>
+</ul>
+</li>
+<li>17.3’’ HD+ LED (1600 x 900)</li>
+</ul>
+<p>We need determine some details of the computer.  I used a USB drive with live linux to do this (Maybe it can be done in windows but I am not familiar with windows and I happen to have a <a href="https://manjaro.org/get-manjaro/" target="_blank" rel="noopener">Manjaro</a> as live linux drive burned by <a href="https://etcher.io/" target="_blank" rel="noopener">etcher</a> . Then start linux on the computer. Open a terminal and input commands below.</p>
+<p>Check information about audio, wireless, graphics…<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lspci -nn</span><br></pre></td></tr></table></figure></p>
+<p>Check keyboard and trackpad information<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/bus/input/devices</span><br><span class="line"><span class="comment"># Or for shorter</span></span><br><span class="line">cat /proc/bus/input/devices|grep name</span><br></pre></td></tr></table></figure></p>
+<p>We found more details, so that we can download kext (driver) later.</p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> Ethernet RLT8101/2/6E, there is a drive.</li>
+<li style="list-style: none"><input type="checkbox"> Wireless RLT8188EE</li>
+<li style="list-style: none"><input type="checkbox" checked> Sound card was Intel Sunrise Point-LP HD Audio</li>
+<li style="list-style: none"><input type="checkbox" checked> PS/2 trackpad and keyboard</li>
+</ul>
+<p>###Process<br>Basically, follow the <a href="https://www.tonymacx86.com/threads/unibeast-install-macos-high-sierra-on-any-supported-intel-based-pc.235474/" target="_blank" rel="noopener">installation guide on tonymax86</a>. We need a USB drive (&gt;16gb) and a set of USB keyboard/mouse, before we install the PS/2 drive we can’t use the keyboard and trackpad on the laptop.</p>
+<ol>
+<li>Download High Sierra from App Store</li>
+<li><p>Format the USB driver<br>Using command line can prevent some GUID problems, especially the usb drive was formatted and used in windows or other system before.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Find your driver</span></span><br><span class="line">diskutil list</span><br><span class="line"><span class="comment"># Say your driver is disk3, format the driver to HFS and named as MacOS.</span></span><br><span class="line">diskutil eraseDisk HFS+ MacOS GPT /dev/disk3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Download <a href="https://www.tonymacx86.com/resources/categories/tonymacx86-downloads.3/" target="_blank" rel="noopener">UniBeast</a> and run it, I got <a href="https://www.tonymacx86.com/resources/unibeast-8-3-2.383/" target="_blank" rel="noopener">UniBeast 8.3.2</a> on 06/24/18. UniBeast will created a installation disk for you.<br>3.0 You need a tonymacx account to download it.<br>3.1 I selected UEFI Boot Mode.<br>3.2 Don’t select anything Graphics Configuration.<br>3.3 Maybe take 10-20mins to get it done.</p>
+</li>
+<li>Copy <a href="https://www.tonymacx86.com/resources/categories/tonymacx86-downloads.3/" target="_blank" rel="noopener">MultiBeast</a>, <a href="https://www.tonymacx86.com/resources/categories/other-archive.9/" target="_blank" rel="noopener">KextBeast</a>, <a href="https://www.tonymacx86.com/resources/categories/other-archive.9/" target="_blank" rel="noopener">EFI Mounter</a>, <a href="https://www.insanelymac.com/forum/files/file/259-realtekrtl8100-binary/" target="_blank" rel="noopener">RealtekRTL8100 driver</a>, <a href="https://github.com/RehabMan/OS-X-Voodoo-PS2-Controller" target="_blank" rel="noopener">Voodoo PS/2 controller driver</a> to the USB drive.<br>4.1 MultiBeast will install the bootload and drivers for you after your Hackintosh installed. I got <a href="https://www.tonymacx86.com/resources/multibeast-high-sierra-10-3-0.388/" target="_blank" rel="noopener">MultiBeast 8.3.2</a> on 06/24/18.<br>4.2 KextBeast is a kext installer. I got <a href="https://www.tonymacx86.com/resources/kextbeast.32/" target="_blank" rel="noopener">KextBeast</a> on 06/24/18.<br>4.3 EFI Mounter will mount EFI drive and we can edit the clover config. I got <a href="https://www.tonymacx86.com/resources/efi-mounter-v3.280/" target="_blank" rel="noopener">EFI Mounter 3</a> on 06/24/18.<br>4.4 I got <a href="https://www.insanelymac.com/forum/files/file/259-realtekrtl8100-binary/" target="_blank" rel="noopener">RealtekRTL8100 driver 2.0.0</a> on 06/24/18.<br>4.5 I got <a href="https://bitbucket.org/RehabMan/os-x-voodoo-ps2-controller/downloads/RehabMan-Voodoo-2018-0506.zip" target="_blank" rel="noopener">Voodoo PS/2 controller driver</a>  on 06/24/18.</li>
+<li>Get into BIOS by pressing F10 while booting.<br>5.1 Disable security start up.<br>5.2 Disable Virtualization Technology<br>5.3 Disable CFG</li>
+<li>Start the installation with usb drive.</li>
+<li><p>You may need to format the hard drive.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Find your driver, again.</span></span><br><span class="line">diskutil list</span><br><span class="line"><span class="comment"># In most case, your driver is disk0, format the driver to HFS and named as MacOS.</span></span><br><span class="line">diskutil eraseDisk HFS+ MacOS GPT /dev/disk0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Then install the OS. There were several restarts during installation.</p>
+</li>
+<li>After installation, restart the machine with USB and add option <code>-disablegfxfirmware</code>. That will prevent the grey screen during restart. </li>
+<li>Run the MultiBeast. Select UEFI and in the drive tap select the latest version of VoodooHDA. I got 2.9.0 in 06/24/18.</li>
+<li>Run EFI Mounter 3. Then get edit the clover <code>/EFI/CLOVER/config.plist</code>. Change the Intel video injection to false. (This is confusing. I found when this is on. OS can’t be started.)</li>
+<li>Install the RealtekRTL8100 driver with with KextBeast.</li>
+<li>Install the VoodooPS2Controller.kext with KextBeast and copy the VoodooPS2Daemon in the folder to <code>/usr/bin</code></li>
+<li>Restart. All DONE!!!<h2 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h2></li>
+</ol>
+<ul>
+<li>Repair the voodooDdaSettingsLoader problem</li>
+<li>Add BT4.0 and repair the wireless<ul>
+<li>half pci-e: BCM943224HMP</li>
+<li>M.2 / NGFF: BCM94352Z</li>
+</ul>
+</li>
+</ul>
+</div><div class="tags"><a href="/tags/Hackintosh/">Hackintosh</a><a href="/tags/MacOS/">MacOS</a></div><div class="post-nav"><a class="next" href="/2018/06/21/vultr_starup/">Start script for deploy a centOS with XFCE on Vultr</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://sisyphus-deng.github.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/MacOS/">MacOS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/general-programming/">general programming</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/Hackintosh/" style="font-size: 15px;">Hackintosh</a> <a href="/tags/MacOS/" style="font-size: 15px;">MacOS</a> <a href="/tags/gist/" style="font-size: 15px;">gist</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/06/24/Install-MacOS-on-HP-17-x173dx-1/">Install MacOS on HP 17-x173dx (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/21/vultr_starup/">Start script for deploy a centOS with XFCE on Vultr</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">Sisyphus Deng.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
